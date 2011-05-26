@@ -1,0 +1,5 @@
+Quickstart:
+>> changepath
+>> demo
+
+Note that the level-set package must be included to run the demo (See changepath.m).
