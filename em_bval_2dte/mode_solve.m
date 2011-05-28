@@ -7,9 +7,9 @@ function [mode] = mode_solve(eps, omega, dir)
 
 % Make z the propagation the direction.
 switch (dir)
-    case {'-x', '+x'}
+    case {'x-', 'x+'}
         eps = struct('x', eps.y(:), 'z', eps.x(:));
-    case {'-y', '+y'}
+    case {'y-', 'y+'}
         eps = struct('x', eps.x(:), 'z', eps.y(:));
 end
 
@@ -62,15 +62,9 @@ Ez = Ex2Ez(Ex, beta);
 % Obtain the transverse H-field (Hy).
 Hy = E2Hy(Ex, Ez, beta);
 
-% Info for sourcing.
-Jx = Ex .* eps.x; 
-Jz = Ez .* eps.z; 
-My = Hy;
-
 
     %
     % Re-package for the actual propagation direction.
     %
 
-mode = struct('beta', beta,     'Et', Ex, 'El', Ez, 'Ht', Hy, ...
-                                'Jt', Jx, 'Jl', Jz, 'Mt', My);
+mode = struct('beta', beta, 'Et', Ex, 'El', Ez, 'Ht', Hy);

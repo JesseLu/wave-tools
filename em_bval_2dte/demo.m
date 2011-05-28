@@ -52,10 +52,7 @@ phi = lset_complement(phi);
     % Find the input and output modes.
     %
 
-dir = '-x';
-input = mode_solve(mode_cutout(phi2e(phi), dir), omega, dir);
-[Jx, Jy, M] = mode_insert(input, dir);
-J = [Jx, Jy];
+[Ex, Ey, Hz] = setup_border_vals({'x-', 'x+'}, omega, phi2e(phi));
 
 
     %
@@ -63,7 +60,7 @@ J = [Jx, Jy];
     %
 
 % Obtain physics matrix.
-[A, E2H] = setup_physics(dims, omega, p2e, e2p);
+[A, b] = setup_physics(omega, eps);
 
 % Solve.
 x = A(phi2e(phi)) \ b(J,M);
