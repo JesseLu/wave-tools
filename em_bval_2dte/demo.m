@@ -8,7 +8,7 @@ help demo
     % Some optimization parameters.
     %
 
-dims = [80 80]; % Size of the grid.
+dims = [120 80]; % Size of the grid.
 N = prod(dims);
 
 eps_lo = 1.0; % Relative permittivity of air.
@@ -60,15 +60,21 @@ phi = lset_complement(phi);
     %
 
 % Obtain physics matrix.
-[A, b] = setup_physics(omega, eps);
+A = setup_physics(omega, phi2e(phi));
+
+%
+[Ahat, bhat, add_border] = setup_border_insert(A, [Ex(:); Ey(:); Hz(:)]);
 
 % Solve.
-x = A(phi2e(phi)) \ b(J,M);
+xhat = Ahat \ -bhat;
+
+x = add_border(xhat);
+
 
 % Back-out field components.
 Ex = reshape(x(1:N), dims);
-Ey = reshape(x(N+1:end), dims);
-Hz = reshape(E2H(x), dims);
+Ey = reshape(x(N+1:2*N), dims);
+Hz = reshape(x(2*N+1:end), dims);
 
 
     %
@@ -84,3 +90,7 @@ figure(2); plot_fields(dims, ...
     {'Re(Ex)', real(Ex)}, {'Re(Ey)', real(Ey)}, {'Re(Hz)', real(Hz)}, ...
     {'Im(Ex)', imag(Ex)}, {'Im(Ey)', imag(Ey)}, {'Im(Hz)', imag(Hz)}, ...
     {'|Ex|', abs(Ex)}, {'|Ey|', abs(Ey)}, {'|Hz|', abs(Hz)});
+
+ey = Ey(:, dims(2)/2);
+hz = Hz(:, dims(2)/2);
+figure(3); plot([real(ey), real(hz), real(conj(hz).*ey)]);

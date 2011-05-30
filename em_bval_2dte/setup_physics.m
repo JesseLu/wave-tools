@@ -1,4 +1,4 @@
-function [A, b] = setup_physics(omega, eps)
+function [A] = setup_physics(omega, eps)
 
 
     %
