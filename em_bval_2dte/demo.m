@@ -14,7 +14,7 @@ N = prod(dims);
 eps_lo = 1.0; % Relative permittivity of air.
 eps_hi = 12.25; % Relative permittivity of silicon.
 
-omega = 0.2; % Angular frequency of desired mode.
+omega = 0.15; % Angular frequency of desired mode.
 
 
     %
@@ -39,6 +39,7 @@ DIMS_ = dims;
 
 lset_grid(dims);
 phi = lset_box([0 0], [1000 10]);
+% phi = lset_union(phi, lset_box([0 0], [10 1000])); % Form cross-beam.
 phi = lset_complement(phi);
 
 % Initialize phi, and create conversion functions.
@@ -62,14 +63,14 @@ phi = lset_complement(phi);
 % Obtain physics matrix.
 A = setup_physics(omega, phi2e(phi));
 
-%
+% Obtain the matrices for the boundary-value problem.
 [Ahat, bhat, add_border] = setup_border_insert(A, [Ex(:); Ey(:); Hz(:)]);
 
-% Solve.
+% Solve the boundary-value problem.
 xhat = Ahat \ -bhat;
 
+% Obtain the full field (re-insert the field values at the boundary).
 x = add_border(xhat);
-
 
 % Back-out field components.
 Ex = reshape(x(1:N), dims);
@@ -91,6 +92,7 @@ figure(2); plot_fields(dims, ...
     {'Im(Ex)', imag(Ex)}, {'Im(Ey)', imag(Ey)}, {'Im(Hz)', imag(Hz)}, ...
     {'|Ex|', abs(Ex)}, {'|Ey|', abs(Ey)}, {'|Hz|', abs(Hz)});
 
-ey = Ey(:, dims(2)/2);
-hz = Hz(:, dims(2)/2);
-figure(3); plot([real(ey), real(hz), real(conj(hz).*ey)]);
+% % Plot cross-section, and check power flow.
+% ey = Ey(:, dims(2)/2);
+% hz = Hz(:, dims(2)/2);
+% figure(3); plot([real(ey), real(hz), real(conj(hz).*ey)]);

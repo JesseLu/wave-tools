@@ -1,3 +1,5 @@
+Solves the two-dimensional transverse-electric time-harmonic Maxwell's equations. Includes functionality to excite the fundamental mode of a dielectric waveguide.
+
 Quickstart:
 >> changepath
 >> demo
