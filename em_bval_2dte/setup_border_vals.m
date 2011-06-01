@@ -2,7 +2,7 @@ function [Ex, Ey, Hz] = setup_border_vals(dirs, omega, eps)
 % Determine the border values for the fields.
 
 global DIMS_
-dims = DIMS_
+dims = DIMS_;
 
 % A simple guesstimation of the length from input to output port.
 % Used to guess the initial phase difference between input and output port.
