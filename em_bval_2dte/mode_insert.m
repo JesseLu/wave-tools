@@ -9,10 +9,8 @@ Ex = zeros(DIMS_);
 Ey = zeros(DIMS_);
 Hz = zeros(DIMS_);
 
-% Add the time-delay incurred by the offset in the Yee grid.
-% Note that this is a time-delay, not a space-delay, which is why we need to
-% add a negative, not positive, phase factor.
-d_phase = exp(-i * mode.beta * 0.5);
+% Add the spatial-delay incurred by the offset in the Yee grid.
+d_phase = exp(i * mode.beta * 0.5);
 
     
     % 
@@ -20,23 +18,23 @@ d_phase = exp(-i * mode.beta * 0.5);
     %
 
 switch ([side, dir])
-    case {'x-in', 'x+out'}
-        Ex(x,y) = -mode.El * d_phase;
+    case {'x-in', 'x+out'} % Left-traveling.
+        Ex(x,y) = mode.El * d_phase;
         Ey(x,y) = mode.Et;
         Hz(x,y) = mode.Ht * d_phase;
 
-    case {'x-out', 'x+in'}
-        Ex(x,y) = mode.El / d_phase;
+    case {'x-out', 'x+in'} % Right-traveling.
+        Ex(x,y) = -mode.El / d_phase;
         Ey(x,y) = mode.Et;
         Hz(x,y) = -mode.Ht / d_phase;
 
-    case {'y-in', 'y+out'}
-        Ey(x,y) = -mode.El * d_phase;
+    case {'y-in', 'y+out'} % Upward-traveling.
+        Ey(x,y) = mode.El * d_phase;
         Ex(x,y) = mode.Et;
         Hz(x,y) = -mode.Ht * d_phase;
 
-    case {'y-out', 'y+in'}
-        Ey(x,y) = mode.El / d_phase;
+    case {'y-out', 'y+in'} % Downward-traveling.
+        Ey(x,y) = -mode.El / d_phase;
         Ex(x,y) = mode.Et;
         Hz(x,y) = mode.Ht / d_phase;
 end

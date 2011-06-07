@@ -22,5 +22,5 @@ N = prod(DIMS_);
     %
 
 % Primary physics matrix, electromagnetic wave equation.
-A = [Ecurl, i*omega*speye(N); -i*omega*D_([eps.x(:), eps.y(:)]), Hcurl];
+A = [Ecurl, -i*omega*speye(N); i*omega*D_([eps.x(:), eps.y(:)]), Hcurl];
 

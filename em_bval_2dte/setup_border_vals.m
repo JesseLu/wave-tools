@@ -26,7 +26,7 @@ for k = 1 : 2
     mode = mode_solve(mode_cutout(eps, dirs{k}), omega, dirs{k});
 
     % Split phase difference between input and output ports.
-    phase = mode.beta * (len-1);
+    phase = -mode.beta * (len-1);
     if strcmp(in_out{k}, 'in')
         phase = phase/2;
     else
