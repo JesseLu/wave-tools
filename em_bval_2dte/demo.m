@@ -1,6 +1,8 @@
 % DEMO
 % 
 % Solve boundary-value problem for a silicon waveguide in air.
+% Fiddle around with the cross-beam parameters for different "soft physics"
+% solves.
 help demo
 
 
@@ -8,7 +10,7 @@ help demo
     % Some optimization parameters.
     %
 
-dims = [120 80]; % Size of the grid.
+dims = [80 80]; % Size of the grid.
 N = prod(dims);
 
 eps_lo = 1.0; % Relative permittivity of air.
@@ -39,7 +41,7 @@ DIMS_ = dims;
 
 lset_grid(dims);
 phi = lset_box([0 0], [1000 10]);
-% phi = lset_union(phi, lset_box([0 0], [10 1000])); % Form cross-beam.
+phi = lset_union(phi, lset_box([0 0], [10 1000])); % Form cross-beam.
 phi = lset_complement(phi);
 
 % Initialize phi, and create conversion functions.
@@ -53,7 +55,7 @@ phi = lset_complement(phi);
     % Find the input and output modes.
     %
 
-[Ex, Ey, Hz] = setup_border_vals({'x-', 'x+'}, omega, phi2e(phi));
+[Ex, Ey, Hz] = setup_border_vals({'x-', 'y-'}, omega, phi2e(phi));
 
 
     %
@@ -92,6 +94,7 @@ figure(2); plot_fields(dims, ...
     {'Im(Ex)', imag(Ex)}, {'Im(Ey)', imag(Ey)}, {'Im(Hz)', imag(Hz)}, ...
     {'|Ex|', abs(Ex)}, {'|Ey|', abs(Ey)}, {'|Hz|', abs(Hz)});
 
+figure(3); plot_fields(dims, {'|Hz|', abs(Hz)}, {'Re(Hz)', real(Hz)});
 % % Plot cross-section, and check power flow.
 % ey = Ey(:, dims(2)/2);
 % hz = Hz(:, dims(2)/2);
