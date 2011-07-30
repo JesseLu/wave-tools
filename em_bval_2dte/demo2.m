@@ -1,23 +1,18 @@
-% DEMO
+% DEMO2
 % 
-% Solve boundary-value problem for a silicon waveguide in air.
-% Fiddle around with the cross-beam parameters for different "soft physics"
-% solves.
-%
 % Requires the level-set package from github.com/JesseLu
-help demo
-changepath
+help demo2
 
 
     %
     % Some optimization parameters.
     %
 
-dims = [80 80]; % Size of the grid.
+dims = [120 80]; % Size of the grid.
 N = prod(dims);
 
 eps_lo = 1.0; % Relative permittivity of air.
-eps_hi = 12.25; % Relative permittivity of silicon.
+eps_hi = [12.25, 4.25]; % Relative permittivity of silicon.
 
 omega = 0.15; % Angular frequency of desired mode.
 
@@ -43,13 +38,18 @@ DIMS_ = dims;
     %
 
 lset_grid(dims);
-phi = lset_box([0 0], [1000 10]);
-phi = lset_union(phi, lset_box([0 0], [10 1000])); % Form cross-beam.
-phi = lset_complement(phi);
+phi1 = lset_complement(lset_box([-60 0], [120 10]));
+phi2 = lset_complement(lset_box([60 0], [120 30]));
 
 % Initialize phi, and create conversion functions.
-[phi, phi2p, phi2e, p2e, e2p, phi_smooth] = ...
-    setup_levelset(phi, eps_lo, eps_hi, 1e-3);
+[phi1, phi2p, phi2e, p2e, e2p, phi_smooth] = ...
+    setup_levelset(phi1, eps_lo, eps_hi(1), 1e-3);
+e1 = phi2e(phi1);
+[phi2, phi2p, phi2e, p2e, e2p, phi_smooth] = ...
+    setup_levelset(phi2, eps_lo, eps_hi(2), 1e-3);
+e2 = phi2e(phi2);
+e.x = max(cat(3, e1.x, e2.x), [], 3);
+e.y = max(cat(3, e1.y, e2.y), [], 3);
 
 % lset_plot(phi); pause % Use to visualize the initial structure.
 
@@ -58,7 +58,7 @@ phi = lset_complement(phi);
     % Find the input and output modes.
     %
 
-[Ex, Ey, Hz] = setup_border_vals({'x-', 'y-'}, omega, phi2e(phi));
+[Ex, Ey, Hz] = setup_border_vals({'x-', 'x+'}, omega, e);
 
 
     %
@@ -66,7 +66,7 @@ phi = lset_complement(phi);
     %
 
 % Obtain physics matrix.
-A = setup_physics(omega, phi2e(phi));
+A = setup_physics(omega, e);
 
 % Obtain the matrices for the boundary-value problem.
 [Ahat, bhat, add_border] = setup_border_insert(A, [Ex(:); Ey(:); Hz(:)]);
@@ -88,8 +88,8 @@ Hz = reshape(x(2*N+1:end), dims);
     %
 
 % Plot the structure.
-eps = phi2e(phi);
-figure(1); plot_fields(dims, {'\epsilon_x', eps.x}, {'\epsilon_y', eps.y});
+% eps = phi2e(phi);
+figure(1); plot_fields(dims, {'\epsilon_x', e.x}, {'\epsilon_y', e.y});
 
 % Plot the fields.
 figure(2); plot_fields(dims, ...
