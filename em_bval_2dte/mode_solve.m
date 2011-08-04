@@ -19,7 +19,7 @@ end
     % z-direction.
     %
 
-global D_ % Diagonalization function.
+D_ = @(x) spdiags(x(:), 0, numel(x), numel(x)); % Diagonalization function.
 
 % Shortcut to form a derivative matrix.
 S = @(sx, sz) shift_mirror(size(eps.x), -[sx sz]); % Mirror boundary conditions.

@@ -18,8 +18,10 @@ e2p = @(eps) reshape(A_gather * [eps.x(:); eps.y(:)], dims);
 % Helper function to convert from phi to p ("digitize phi").
 % Note that this is a "soft" digitization because intermediate values of
 % epsilon are allowed near and on the material interfaces.
-phi2p = @(phi) ((phi .* (phi > -1 & phi < 1) + (phi >= 1) - (phi <= -1)) * ... 
-    (eps_hi-eps_lo)/2) + (eps_hi+eps_lo)/2;
+% phi2p = @(phi) ((phi .* (phi > -1 & phi < 1) + (phi >= 1) - (phi <= -1)) * ... 
+%     (eps_hi-eps_lo)/2) + (eps_hi+eps_lo)/2;
+vect = @(x) x(:);
+phi2p = @(phi)  vect(lset_phi2p(phi))/2 * (eps_hi-eps_lo) + (eps_hi+eps_lo)/2;
 
 % Make it easier to go straight to epsilon from phi.
 phi2e = @(phi) p2e(phi2p(phi));
