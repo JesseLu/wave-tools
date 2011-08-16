@@ -44,7 +44,7 @@ DIMS_ = dims;
 
 lset_grid(dims);
 phi = lset_box([0 0], [1000 10]);
-phi = lset_union(phi, lset_box([0 0], [10 1000])); % Form cross-beam.
+% phi = lset_union(phi, lset_box([0 0], [10 1000])); % Form cross-beam.
 phi = lset_complement(phi);
 
 % Initialize phi, and create conversion functions.
@@ -58,7 +58,7 @@ phi = lset_complement(phi);
     % Find the input and output modes.
     %
 
-[Ex, Ey, Hz] = setup_border_vals({'x-', 'y-'}, omega, phi2e(phi));
+[Ex, Ey, Hz] = setup_border_vals({'x-', 'x+'}, omega, phi2e(phi));
 
 
     %

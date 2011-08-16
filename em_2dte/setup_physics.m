@@ -1,5 +1,5 @@
 function [A, b, E2H] = ...
-    setup_physics(dims, omega, t_pml, p2e, e2p)
+    setup_physics(dims, omega, t_pml)
 
 N = prod(dims);
 
